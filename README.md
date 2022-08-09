@@ -22,7 +22,7 @@ CREATE USER 'haproxyuser'@'%';
 ## Test load balancing on port 3307
 
 ```
-for COUNT in {1..5}; do docker exec -it mysql_source mysql -uroot -pfloat -hhaproxy1 -P3307 -e "select @@hostname"; done
+for COUNT in {1..5}; do docker exec -it mysql_source mysql -uroot -pt00r -hhaproxy1 -P3307 -e "select @@hostname"; done
 ```
 
 ## Use the bash script
