@@ -97,3 +97,7 @@ mysql: [Warning] Using a password on the command line interface can be insecure.
 | replica1   |
 +------------+
 ```
+
+## HAProxy Web View
+
+![HAProxy Web](/docs/assets/haproxy-webview.png)
