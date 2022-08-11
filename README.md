@@ -101,3 +101,69 @@ mysql: [Warning] Using a password on the command line interface can be insecure.
 ## HAProxy Web View
 
 ![HAProxy Web](/docs/assets/haproxy-webview.png)
+
+## Using sysbench
+
+Create the schema:
+```bash
+$ docker run \
+--rm=true \
+--name=sb-schema \
+--network=haproxy-test_default \
+sysbench-docker \
+mysql \
+--user=root \
+--password=t00r \
+--host=haproxy1 \
+--port=3306 \
+-e "CREATE DATABASE sbtest"
+```
+
+Prepare the sysbench database:
+
+```bash
+$ docker run \
+--rm=true \
+--name=sb-prepare \
+--network=haproxy-test_default \
+sysbench-docker \
+sysbench \
+--db-ps-mode=disable \
+--db-driver=mysql \
+--oltp-table-size=100000 \
+--oltp-tables-count=1 \
+--threads=12 \
+--mysql-host=haproxy1 \
+--mysql-port=3306 \
+--mysql-user=root \
+--mysql-password=t00r \
+--mysql-db=sbtest \
+/usr/share/sysbench/tests/include/oltp_legacy/parallel_prepare.lua \
+prepare
+```
+
+Run the benchmark for MySQL:
+
+```bash
+$ docker run \
+--rm=true \
+--name=sb-run \
+--network=haproxy-test_default \
+sysbench-docker \
+sysbench \
+--db-ps-mode=disable \
+--db-driver=mysql \
+--report-interval=2 \
+--mysql-table-engine=innodb \
+--oltp-table-size=100000 \
+--oltp-tables-count=1 \
+--threads=12 \
+--time=60 \
+--mysql-host=haproxy1 \
+--mysql-port=3307 \
+--mysql-user=root \
+--mysql-password=t00r \
+--mysql-db=sbtest \
+/usr/share/sysbench/tests/include/oltp_legacy/select.lua \
+run
+```
