@@ -104,6 +104,12 @@ mysql: [Warning] Using a password on the command line interface can be insecure.
 
 ## Using sysbench
 
+Create the container image:
+```bash
+$ cd sb-docker/
+$ DOCKER_BUILDKIT=1 docker build . -t sysbench-docker
+```
+
 Create the schema:
 ```bash
 $ docker run \
