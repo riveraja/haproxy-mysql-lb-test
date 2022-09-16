@@ -57,7 +57,7 @@ Create the schema:
 $ docker run \
 --rm=true \
 --name=sb-schema \
---network=haproxy-test_default \
+--network=haproxy-mysql-lb-test_default \
 sysbench-docker \
 mysql \
 --user=root \
@@ -73,7 +73,7 @@ Prepare the sysbench database:
 $ docker run \
 --rm=true \
 --name=sb-prepare \
---network=haproxy-test_default \
+--network=haproxy-mysql-lb-test_default \
 sysbench-docker \
 sysbench \
 --db-ps-mode=disable \
@@ -96,7 +96,7 @@ Run the benchmark for MySQL:
 $ docker run \
 --rm=true \
 --name=sb-run \
---network=haproxy-test_default \
+--network=haproxy-mysql-lb-test_default \
 sysbench-docker \
 sysbench \
 --db-ps-mode=disable \
@@ -105,8 +105,8 @@ sysbench \
 --mysql-table-engine=innodb \
 --oltp-table-size=100000 \
 --oltp-tables-count=1 \
---threads=12 \
---time=60 \
+--threads=36 \
+--time=0 \
 --mysql-host=haproxy1 \
 --mysql-port=3307 \
 --mysql-user=root \
