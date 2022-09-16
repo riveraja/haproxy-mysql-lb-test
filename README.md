@@ -2,30 +2,7 @@
 
 ## Deploy the instances
 
-```
-docker-compose up -d
-```
-
-## Setup replication on each replica
-
-```
-CHANGE REPLICATION SOURCE TO SOURCE_HOST='mysql_source', SOURCE_USER='root', SOURCE_PASSWORD='t00r', SOURCE_AUTO_POSITION=1;
-START REPLICA;
-```
-
-## Add the haproxy user
-
-```
-CREATE USER 'haproxyuser'@'%';
-```
-
-## Test load balancing on port 3307
-
-```
-for COUNT in {1..5}; do docker exec -it mysql_source mysql -uroot -pt00r -hhaproxy1 -P3307 -e "select @@hostname"; done
-```
-
-## Use the bash script
+### Use the bash script
 Sample terminal output:
 ```
 $ ./setupenv.sh start
@@ -42,7 +19,7 @@ mysql: [Warning] Using a password on the command line interface can be insecure.
 Execute docker-compose logs haproxy1 and check if the backends are up. Alternatively open your browser and browse to <IP>:80/haproxy/stats with user: mysqlstats and pwd: secret
 ```
 
-## Check if all backends are UP
+### Check if all backends are `RUNNING`
 Sample terminal output:
 ```
 $ docker-compose logs -f haproxy1
@@ -61,48 +38,13 @@ haproxy1    | [WARNING]  (8) : Server mysqlro-back/mysql2 is UP, reason: Layer7 
 haproxy1    | [WARNING]  (8) : Server mysqlro-back/mysql3 is UP, reason: Layer7 check passed, code: 0, check duration: 2ms. 3 active and 0 backup servers online. 0 sessions requeued, 0 total in queue.
 ```
 
-## Test load balancing on port 3307
-
-Sample terminal output:
-```
-$ ./lbtest.sh
-mysql: [Warning] Using a password on the command line interface can be insecure.
-+------------+
-| @@hostname |
-+------------+
-| replica3   |
-+------------+
-mysql: [Warning] Using a password on the command line interface can be insecure.
-+------------+
-| @@hostname |
-+------------+
-| replica1   |
-+------------+
-mysql: [Warning] Using a password on the command line interface can be insecure.
-+------------+
-| @@hostname |
-+------------+
-| replica2   |
-+------------+
-mysql: [Warning] Using a password on the command line interface can be insecure.
-+------------+
-| @@hostname |
-+------------+
-| replica3   |
-+------------+
-mysql: [Warning] Using a password on the command line interface can be insecure.
-+------------+
-| @@hostname |
-+------------+
-| replica1   |
-+------------+
-```
-
-## HAProxy Web View
+### HAProxy Web View
 
 ![HAProxy Web](/docs/assets/haproxy-webview.png)
 
-## Using sysbench
+## Test load balancing on port 3307
+
+### Using sysbench
 
 Create the container image:
 ```bash
