@@ -1,4 +1,4 @@
-FROM rockylinux:latest
+FROM rockylinux:9.0
 LABEL maintainer=jerichorivera
 
 RUN dnf update -y \
