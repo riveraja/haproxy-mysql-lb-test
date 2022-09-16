@@ -3,8 +3,6 @@
 if [[ $1 = "start" ]]; then
     docker compose up -d
 
-    sleep 60
-
     for IMG in $(docker compose ps --status running | jq -r .[].Name); do docker exec -it $IMG bash -c "mysql -uroot -pt00r < /sqlscripts/replication.sql"; done
 
     docker exec -it mysql_source bash -c "mysql -uroot -pt00r < /sqlscripts/user.sql"
